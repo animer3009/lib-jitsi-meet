@@ -263,7 +263,8 @@ JitsiConference.prototype._init = function(options = {}) {
             callStatsCustomScriptUrl: config.callStatsCustomScriptUrl,
             callStatsID: config.callStatsID,
             callStatsSecret: config.callStatsSecret,
-            roomName: this.options.name
+            roomName: this.options.name,
+            applicationName: config.applicationName
         });
     }
 
