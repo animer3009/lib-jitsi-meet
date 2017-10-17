@@ -198,8 +198,11 @@ const ScreenObtainer = {
             logger.info('Using Temasys plugin for desktop sharing');
 
             return obtainWebRTCScreen;
-        } else if (RTCBrowserType.isChrome()) {
-            if (RTCBrowserType.getChromeVersion() < 34) {
+        } else if (RTCBrowserType.isChrome() || RTCBrowserType.isOpera()) {
+            if ((RTCBrowserType.isChrome()
+                    && RTCBrowserType.getChromeVersion() < 34)
+                || (RTCBrowserType.isOpera()
+                        && RTCBrowserType.getOperaVersion() < 34)) {
                 logger.info('Chrome extension not supported until ver 34');
 
                 return null;
@@ -387,6 +390,19 @@ const ScreenObtainer = {
                     + 'Changes will take effect after next Chrome restart.');
 
                 /* eslint-enable no-alert */
+            }
+
+            // for opera there is no inline install
+            // extension "Download Chrome Extension" allows us to open
+            // the chrome webstore and install from there and then activate our
+            // extension
+            if (RTCBrowserType.isOpera()) {
+                options.listener('waitingForExtension',
+                    getWebStoreInstallUrl(this.options));
+                this.checkForChromeExtensionOnInterval(
+                    options, streamCallback, failCallback);
+
+                return;
             }
 
             try {
